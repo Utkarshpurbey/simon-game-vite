@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const App = () => {
   const colors = ["red", "green", "blue", "yellow"];
@@ -8,7 +8,7 @@ const App = () => {
     "bg-blue-500",
     "bg-yellow-500",
   ];
-  const blinkClass = "opacity-50";
+  const blinkClass = "opacity-20";
   const [gameSequence, updateGameSequence] = React.useState([]);
   const [userSequence, updateUserSequence] = React.useState<string[]>([]);
   const [hasGameStarted, updateGameStatus] = React.useState<boolean>(false);
@@ -19,12 +19,12 @@ const App = () => {
 
   const generateSequnce = () => {
     const newGeneratedColor = colors[Math.floor(Math.random() * colors.length)];
-    console.log("uttu", newGeneratedColor);
     setTimeout(() => {
       animatePress(newGeneratedColor);
     }, 300);
     updateGameSequence([...gameSequence, newGeneratedColor]);
   };
+
   const updateUserInput = (color) => {
     updateNoOfPress(noOfPress + 1);
     updateUserSequence([...userSequence, color]);
@@ -35,8 +35,8 @@ const App = () => {
   const captureUserInputandProceed = (length, newUserInput) => {
     console.log(newUserInput, gameSequence);
     if (newUserInput[length - 1] === gameSequence[length - 1]) {
-        if (newUserInput.length === gameSequence.length) {
-            updateScore(score + 1);
+      if (newUserInput.length === gameSequence.length) {
+        updateScore(score + 1);
         setTimeout(() => {
           generateSequnce();
         }, 1000);
@@ -46,16 +46,8 @@ const App = () => {
       updateUserMistakeStatus(true);
     }
   };
-  const resetGame = () => {
-    // if (window) {
-    //     window.location.reload();
-    // }
-    // updateGameSequence([]);
-    // updateUserSequence([]);
-    // updateGameStatus(false);
-    // updateNoOfPress(0);
-    // updateUserMistakeStatus(false);
 
+  const resetGame = () => {
     if (window) {
       window.location.reload();
     }
@@ -85,7 +77,7 @@ const App = () => {
   useEffect(() => {
     if (window) {
       const updateGameStatusFunction = (e) => {
-        if (e.key === "a") {
+        if (e.key === "a" || e.key === "A") {
           updateGameStatus(true);
           generateSequnce();
           window.removeEventListener("keydown", updateGameStatusFunction);
@@ -99,30 +91,29 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <div className="bg-black h-screen">
       {!hasGameStarted ? (
-        <div id="start-game">
+        <div id="start-game" className="text-white">
           Press a from keyboard to start playing the game
         </div>
       ) : (
-                  <>
-                      <div>Score : {score}</div>
-          <div className="flex p-4">
-            {colors.map((color, index) => (
-              <div id={`id-${color}`} className="px-4">
-                <div
-                  className={` h-10 w-fit ${boxColor[index]} p-4 rounded-lg flex items-center aling-center cursor-pointer hover:shadow-lg hover:scale-110 active:bg-violet-700`}
-                  onClick={() => updateUserInput(color)}
-                  key={`id-${color}-index-${index}`}
-                >
-                  <div>{color}</div>
-                </div>
+        <div>
+          <div className="grid grid-cols-2 gap-5 px-4 py-4">
+            {colors?.map((item, index) => (
+              <div
+                key={`id-${item}-index-${index}`}
+                id={`id-${item}`}
+                onClick={() => updateUserInput(item)}
+              >
+                <button className={`h-[25vh] w-full ${boxColor[index]} 
+                transform transition duration-200 active:scale-95 rounded-lg`}
+                ></button>
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 export default App;
