@@ -90,14 +90,33 @@ const App = () => {
     }
   }, []);
 
+  const showHint = () => {
+    if (gameSequence.length > 0) {
+      gameSequence.forEach((color, index) => {
+        setTimeout(() => {
+          animatePress(color);
+        }, index * 500);
+      });
+    }
+  };
+
   return (
     <div className="bg-black h-screen">
       {!hasGameStarted ? (
-        <div id="start-game" className="text-white">
-          Press a from keyboard to start playing the game
+        <div
+          id="start-game"
+          className="text-white flex justify-center aling-center h-screen"
+        >
+          Press "a" from keyboard to start playing the game
         </div>
       ) : (
         <div>
+          <div className="text-[#fff]">Score:- {score}</div>
+          <div>
+            <button onClick={showHint} className="text-[#fff] bg-red-500 p-1">
+              Show hint
+            </button>
+          </div>
           <div className="grid grid-cols-2 gap-5 px-4 py-4">
             {colors?.map((item, index) => (
               <div
@@ -105,7 +124,8 @@ const App = () => {
                 id={`id-${item}`}
                 onClick={() => updateUserInput(item)}
               >
-                <button className={`h-[25vh] w-full ${boxColor[index]} 
+                <button
+                  className={`h-[25vh] w-full ${boxColor[index]} 
                 transform transition duration-200 active:scale-95 rounded-lg`}
                 ></button>
               </div>
